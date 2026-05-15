@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
+import 'package:flutter_concepts/widgets/my_app_bar.dart';
+import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:intl/intl.dart';
 
 class AddRendezVousScreen extends StatefulWidget {
@@ -58,50 +60,8 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
 
 
     return Scaffold(
-       appBar: AppBar(
-        title: const Text('Gestion de Rendez‑vous'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.indigo,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Mes RV'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Paramètres'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('À propos'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+         appBar: const MyAppBar(),
+        drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(22.0),
         child: Form(

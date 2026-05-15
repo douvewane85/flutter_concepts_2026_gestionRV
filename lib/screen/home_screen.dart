@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
 import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_concepts/widgets/my_app_bar.dart';
+import 'package:flutter_concepts/widgets/my_drawer.dart';
+import 'package:flutter_concepts/widgets/rv_list_item.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -58,77 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
     return Scaffold(
-       appBar: AppBar(
-        title: const Text('Gestion de Rendez‑vous'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.indigo,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Mes RV'),
+      appBar: const MyAppBar(),
+      drawer: const MyDrawer(),
+      body: ListView(
+        children: [
+          for (int i = 0; i < _rendezvouss.length; i++)
+            RVListItem(
+              appointment: _rendezvouss[i],
               onTap: () {
-                Navigator.pop(context);
+                // Placeholder for future actions
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Paramètres'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('À propos'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: ListView(children: [
-      for(int i=0;i<_rendezvouss.length;i++)
-          Card(
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: ListTile(
-          leading: const Icon(Icons.event_note, color: Colors.indigo),
-          title:  Text(_rendezvouss[i].title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle:  Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               Text(DateFormat('dd MMM yyyy – HH:mm').format(_rendezvouss[i].date)),
-              if (_rendezvouss[i].description != null && _rendezvouss[i].description!.isNotEmpty)
-                 Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(_rendezvouss[i].description! , style: const TextStyle(color: Colors.grey)),
-                ),
-             ],
-          ),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () {
-
-          }, // Placeholder for future actions
-          ),
-        )
-
-      ],
-      
+        ],
       ),
       floatingActionButton: FloatingActionButton(
          child:   const Icon(Icons.add),
