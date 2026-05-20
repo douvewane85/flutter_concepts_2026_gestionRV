@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
+import 'package:flutter_concepts/widgets/my_app_bar.dart';
+import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:intl/intl.dart';
 
 class RendezVousDetailScreen extends StatelessWidget {

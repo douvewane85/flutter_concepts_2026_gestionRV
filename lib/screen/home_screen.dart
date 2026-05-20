@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
-import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
+import 'package:flutter_concepts/routes/app_router.dart';
+import 'package:flutter_concepts/services/rendezvous_service.dart';
 import 'package:flutter_concepts/widgets/my_app_bar.dart';
 import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:flutter_concepts/widgets/rv_list_item.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,80 +14,54 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<RendezVous> _rendezvouss = [
-    RendezVous(
-      title: 'Consultation médicale',
-      date: DateTime.now(),
-      description: 'Consultation avec le Dr. Martin',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-  ];
+  final RendezVousService _rendezVousService = RendezVousService();
+  late List<RendezVous> _appointments;
 
-  void _addRendezVous(RendezVous rv) {
+  @override
+  void initState() {
+    super.initState();
+    _appointments = _rendezVousService.getAppointments();
+  }
+
+  void _refreshAppointments() {
     setState(() {
-      _rendezvouss.add(rv);
+      _appointments = _rendezVousService.getAppointments();
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    
-
-
     return Scaffold(
       appBar: const MyAppBar(),
       drawer: const MyDrawer(),
       body: ListView(
         children: [
-          for (int i = 0; i < _rendezvouss.length; i++)
+          for (int i = 0; i < _appointments.length; i++)
             RVListItem(
-              appointment: _rendezvouss[i],
+              appointment: _appointments[i],
               onTap: () {
-                // Placeholder for future actions
+                Navigator.pushNamed(
+                  context,
+                  AppRouter.rendezvousDetail,
+                  arguments: _appointments[i],
+                );
               },
             ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-         child:   const Icon(Icons.add),
-         tooltip: "Ajouter un RV",
+        tooltip: "Ajouter un RV",
         onPressed: () async {
-           final rvCreated = await Navigator.push<RendezVous>(
+          final success = await Navigator.pushNamed<bool>(
             context,
-            MaterialPageRoute(
-              builder: (_) => const AddRendezVousScreen(),
-            ),
+            AppRouter.addRendezVous,
           );
-          if (rvCreated!=null) {
-              _addRendezVous(rvCreated);
+          if (success == true) {
+            _refreshAppointments();
           }
-      },),
-
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

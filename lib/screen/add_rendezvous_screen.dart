@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
+import 'package:flutter_concepts/services/rendezvous_service.dart';
 import 'package:flutter_concepts/widgets/my_app_bar.dart';
 import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +43,8 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
           ? null
           : _descriptionController.text.trim(),
         );
-         Navigator.pop(context, appointment);
+        RendezVousService().addAppointment(appointment);
+        Navigator.pop(context, true);
      }
 
         @override
@@ -74,7 +76,7 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
                     border: OutlineInputBorder(),
                   ),
               validator: (value) {
-                 (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
+                return (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
               },
             ),
             const SizedBox(height: 16),

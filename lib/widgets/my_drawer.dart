@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_concepts/screen/home_screen.dart';
-import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
+import 'package:flutter_concepts/routes/app_router.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -29,11 +28,9 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Mes RV'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
+              Navigator.pushReplacementNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
-                ),
+                AppRouter.home,
               );
             },
           ),
@@ -42,11 +39,9 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Add Rendez vous'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const AddRendezVousScreen(),
-                ),
+                AppRouter.addRendezVous,
               );
             },
           ),
