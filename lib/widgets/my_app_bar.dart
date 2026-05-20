@@ -5,13 +5,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const MyAppBar({
     super.key,
-    this.title = 'Gestion de Rendez‑vous',
+    required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title),
+      title:  Text(title),
+      backgroundColor: Colors.indigo,
+      elevation: 0,
+      foregroundColor: Colors.white,
     );
   }
 

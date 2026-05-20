@@ -5,6 +5,8 @@ import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:intl/intl.dart';
 
 class AddRendezVousScreen extends StatefulWidget {
+  static const String routeName = '/add-rendezvous';
+
   const AddRendezVousScreen({super.key});
 
   @override
@@ -60,7 +62,7 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
 
 
     return Scaffold(
-         appBar: const MyAppBar(),
+         appBar: const MyAppBar(title: 'Ajouter un Rendez‑vous '),
         drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(22.0),
@@ -74,7 +76,7 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
                     border: OutlineInputBorder(),
                   ),
               validator: (value) {
-                 (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
+                return (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
               },
             ),
             const SizedBox(height: 16),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_concepts/screen/home_screen.dart';
-import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
+import 'package:flutter_concepts/routes/app_routes.dart';
+import 'package:flutter_concepts/services/auth_service.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -29,12 +29,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Mes RV'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
-                ),
-              );
+              Navigator.pushReplacementNamed(context, AppRoutes.home);
             },
           ),
           ListTile(
@@ -42,19 +37,22 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Add Rendez vous'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddRendezVousScreen(),
-                ),
-              );
+              Navigator.pushNamed(context, AppRoutes.addRendezVous);
             },
           ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Deconnexion'),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
+              await AuthService().logout();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.login,
+                  (route) => false,
+                );
+              }
             },
           ),
         ],
