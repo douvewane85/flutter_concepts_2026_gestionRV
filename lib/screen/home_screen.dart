@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_concepts/models/rendez_vous.dart';
 import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
+import 'package:flutter_concepts/screen/rendezvous_detail_screen.dart';
 import 'package:flutter_concepts/widgets/my_app_bar.dart';
 import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:flutter_concepts/widgets/rv_list_item.dart';
@@ -68,14 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
             RVListItem(
               appointment: _rendezvouss[i],
               onTap: () {
-                // Placeholder for future actions
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RendezVousDetailScreen(
+                      rendezvous: _rendezvouss[i],
+                    ),
+                  ),
+                );
               },
             ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-         child:   const Icon(Icons.add),
-         tooltip: "Ajouter un RV",
+        tooltip: "Ajouter un RV",
         onPressed: () async {
            final rvCreated = await Navigator.push<RendezVous>(
             context,
@@ -86,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (rvCreated!=null) {
               _addRendezVous(rvCreated);
           }
-      },),
+        },
+        child: const Icon(Icons.add),
+      ),
 
     );
   }
