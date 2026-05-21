@@ -17,8 +17,11 @@ class AppRouter {
           settings: settings,
         );
       case addRendezVous:
+        final args = settings.arguments;
         return MaterialPageRoute(
-          builder: (_) => const AddRendezVousScreen(),
+          builder: (_) => AddRendezVousScreen(
+            appointmentToEdit: args is RendezVous ? args : null,
+          ),
           settings: settings,
         );
       case rendezvousDetail:
