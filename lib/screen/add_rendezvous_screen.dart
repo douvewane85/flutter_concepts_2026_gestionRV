@@ -74,7 +74,7 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
                     border: OutlineInputBorder(),
                   ),
               validator: (value) {
-                 (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
+                 return (value == null || value.trim().isEmpty) ? 'Le titre est requis' : null;
               },
             ),
             const SizedBox(height: 16),
