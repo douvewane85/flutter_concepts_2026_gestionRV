@@ -152,7 +152,7 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
                         border: OutlineInputBorder(),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.between,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(dateText),
                           const Icon(Icons.calendar_today, color: Colors.indigo),
@@ -204,10 +204,10 @@ class _AddRendezVousScreenState extends State<AddRendezVousScreen> {
             ),
           ),
           if (_isLoading)
-            const Positioned.fill(
+            Positioned.fill(
               child: Container(
                 color: Colors.black12,
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               ),
