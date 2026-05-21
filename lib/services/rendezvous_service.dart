@@ -16,6 +16,8 @@ class RendezVousService extends ChangeNotifier {
   List<RendezVous> _rendezvousList = [];
   bool _isInitialized = false;
 
+  List<RendezVous> get appointments => List.unmodifiable(_rendezvousList);
+
   // Initialize the service and load persisted appointments or defaults
   Future<void> init() async {
     if (_isInitialized) return;
