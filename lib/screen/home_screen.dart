@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_concepts/models/rendez_vous.dart';
 import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
 import 'package:flutter_concepts/screen/rendezvous_detail_screen.dart';
+import 'package:flutter_concepts/services/rendezvous_service.dart';
 import 'package:flutter_concepts/widgets/my_app_bar.dart';
 import 'package:flutter_concepts/widgets/my_drawer.dart';
 import 'package:flutter_concepts/widgets/rv_list_item.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,88 +14,71 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<RendezVous> _rendezvouss = [
-    RendezVous(
-      title: 'Consultation médicale',
-      date: DateTime.now(),
-      description: 'Consultation avec le Dr. Martin',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-    RendezVous(
-      title: 'Réunion d\'équipe',
-      date: DateTime.now(),
-      description: 'Réunion mensuelle de l\'équipe',
-    ),
-  ];
-
-  void _addRendezVous(RendezVous rv) {
-    setState(() {
-      _rendezvouss.add(rv);
-    });
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    
-
+    final appointments = RendezvousService().appointments;
 
     return Scaffold(
       appBar: const MyAppBar(),
-      drawer: const MyDrawer(),
-      body: ListView(
-        children: [
-          for (int i = 0; i < _rendezvouss.length; i++)
-            RVListItem(
-              appointment: _rendezvouss[i],
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RendezvousDetailScreen(
-                      rendezvous: _rendezvouss[i],
+      drawer: MyDrawer(
+        onRefresh: () {
+          setState(() {});
+        },
+      ),
+      body: appointments.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.event_busy,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Aucun rendez-vous pour le moment.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                return RVListItem(
+                  appointment: appointment,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RendezvousDetailScreen(
+                          rendezvous: appointment,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Ajouter un RV",
         onPressed: () async {
-          final rvCreated = await Navigator.push<RendezVous>(
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => const AddRendezVousScreen(),
             ),
           );
-          if (rvCreated != null) {
-            _addRendezVous(rvCreated);
-          }
+          setState(() {});
         },
         child: const Icon(Icons.add),
       ),
-
     );
   }
 }

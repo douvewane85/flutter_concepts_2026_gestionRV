@@ -3,7 +3,12 @@ import 'package:flutter_concepts/screen/home_screen.dart';
 import 'package:flutter_concepts/screen/add_rendezvous_screen.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  final VoidCallback? onRefresh;
+
+  const MyDrawer({
+    super.key,
+    this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +45,15 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add),
             title: const Text('Add Rendez vous'),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const AddRendezVousScreen(),
                 ),
               );
+              onRefresh?.call();
             },
           ),
           ListTile(
