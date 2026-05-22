@@ -13,13 +13,17 @@ class RendezvousService {
   Future<List<RendezVous>> getAppointments() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
+      final Map<String, dynamic> body = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      
       if (response.statusCode == 200) {
-        final List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-        return jsonList.map((json) => RendezVous.fromJson(json as Map<String, dynamic>)).toList();
+        final List<dynamic> jsonList = body['data'] as List<dynamic>;
+        return jsonList.map((jsonItem) => RendezVous.fromJson(jsonItem as Map<String, dynamic>)).toList();
       } else {
-        throw Exception('Impossible de charger les rendez-vous: Code ${response.statusCode}');
+        final String message = body['message'] ?? 'Impossible de charger les rendez-vous';
+        throw Exception(message);
       }
     } catch (e) {
+      if (e is Exception) rethrow;
       throw Exception('Erreur de connexion avec l\'API REST : $e');
     }
   }
@@ -31,12 +35,21 @@ class RendezvousService {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(appointment.toJson()),
       );
+      final Map<String, dynamic> body = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      
       if (response.statusCode == 201) {
-        return RendezVous.fromJson(json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
+        return RendezVous.fromJson(body['data'] as Map<String, dynamic>);
       } else {
-        throw Exception('Impossible d\'ajouter le rendez-vous: Code ${response.statusCode}');
+        if (body.containsKey('errors') && body['errors'] != null) {
+          final Map<String, dynamic> errors = body['errors'] as Map<String, dynamic>;
+          final errorMessages = errors.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+          throw Exception('Échec de validation : $errorMessages');
+        }
+        final String message = body['message'] ?? 'Impossible d\'ajouter le rendez-vous';
+        throw Exception(message);
       }
     } catch (e) {
+      if (e is Exception) rethrow;
       throw Exception('Erreur de connexion avec l\'API REST : $e');
     }
   }
@@ -44,11 +57,16 @@ class RendezvousService {
   Future<void> deleteAppointment(int id) async {
     try {
       final response = await http.delete(Uri.parse('$_baseUrl/$id'));
-      if (response.statusCode != 204) {
-        throw Exception('Impossible de supprimer le rendez-vous: Code ${response.statusCode}');
+      final Map<String, dynamic> body = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      
+      if (response.statusCode != 200) {
+        final String message = body['message'] ?? 'Impossible de supprimer le rendez-vous';
+        throw Exception(message);
       }
     } catch (e) {
+      if (e is Exception) rethrow;
       throw Exception('Erreur de connexion avec l\'API REST : $e');
     }
   }
 }
+
